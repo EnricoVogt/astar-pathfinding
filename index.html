@@ -1,0 +1,58 @@
+<style>
+    maptile {position:relative;}
+    maptile g,
+    maptile h,
+    maptile f,
+    maptile i {position:absolute}
+    
+    maptile g {left:0;bottom:0}
+    maptile i {left:50%;bottom:50%}
+    maptile h {right:0;bottom:0}
+    maptile f {left:0;top:0;font-weight:bold}
+</style>    
+<div id="map"></div><button>next</button>
+<script type="module">
+  import {AStar,Map} from './pathfinding.js';
+
+  
+  let mapModel = Map.getMap(10);
+
+  let map = new Map(mapModel, '#map');
+  let startNode = map.getMapTile(2,1)
+  let endNode = map.getMapTile(8,8)
+
+
+  
+  map.drawMap(startNode,endNode);
+
+  let astar = new AStar();
+  astar.map = mapModel;
+
+
+let count = 0;
+let a = astar.getPath(startNode,endNode, function(current, n){
+    
+    let curElem = map.getTile(current.x,current.y)
+    curElem.style.background = "green";
+    n.forEach(N => {
+        
+        let o = map.getTile(N.x,N.y)
+        o.style.background = "orange";
+    });
+},
+function(endNode){
+    console.log("ENDE");
+    console.log(endNode)
+    let doit = function(node){
+        
+        let o = map.getTile(node.x,node.y)
+        o.style.background = "lightgreen";
+        if(node.parent){
+            doit(node.parent)
+        }
+    }
+    doit(endNode)
+});
+
+
+</script>
